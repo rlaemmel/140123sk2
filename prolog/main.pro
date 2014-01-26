@@ -23,14 +23,14 @@ max1(Z) :-
 
 % Initialize search with first 2 palindroms 
 max2([(X1, Y1, M1), (X2, Y2, M2) | L], Z) :-
-  Diff is M2 - M1,
-  max3((Diff, false, X1, Y1, X2, Y2), [(X2, Y2, M2) | L], Z).
+  D is M2 - M1,
+  max3((D, false, X1, Y1, X2, Y2), [(X2, Y2, M2) | L], Z).
   
 % Keep on searching through the list
 max3(Z, [_], Z).
-max3((Diff1, TF, X1, Y1, X2, Y2), [(X3, Y3, M3), (X4, Y4, M4) | L], Z) :-
-  Diff2 is M4 - M3,
-  ( Diff2 > Diff1, max3((Diff2, false, X3, Y3, X4, Y4), [(X4, Y4, M4) | L], Z)
-  ; Diff2 = Diff1, max3((Diff2, true, X3, Y3, X4, Y4), [(X4, Y4, M4) | L], Z)
-  ; max3((Diff1, TF, X1, Y1, X2, Y2), [(X4, Y4, M4) | L], Z)
+max3((D1, TF, X1, Y1, X2, Y2), [(X3, Y3, M3), (X4, Y4, M4) | L], Z) :-
+  D2 is M4 - M3,
+  ( D2 > D1, max3((D2, false, X3, Y3, X4, Y4), [(X4, Y4, M4) | L], Z)
+  ; D2 == D1, max3((D2, true, X3, Y3, X4, Y4), [(X4, Y4, M4) | L], Z)
+  ; max3((D1, TF, X1, Y1, X2, Y2), [(X4, Y4, M4) | L], Z)
   ).
