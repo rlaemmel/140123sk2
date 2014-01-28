@@ -2,4 +2,10 @@ The function siblings returns pairs of consecutive palindroms (only showing hh) 
 
 The function siblings' returns the list sorted by the difference: [(((2,3),(0,0)),28),(((0,0),(0,1)),70),(((0,1),(0,2)),70),(((0,2),(0,3)),70),(((0,3),(0,4)),70),(((0,4),(0,5)),70),(((1,0),(1,1)),70),(((1,1),(1,2)),70),(((1,2),(1,3)),70),(((1,3),(1,4)),70),(((1,4),(1,5)),70),(((2,0),(2,1)),70),(((2,1),(2,2)),70),(((2,2),(2,3)),70),(((0,5),(1,0)),251),(((1,5),(2,0)),251)]
 
-The function maxSibling return the sibling with the maximum difference: (((1,5),(2,0)),251)
+The function maxSibling returns the sibling with the maximum difference:
+
+<pre>
+*Main> maxSibling 
+(((1,5),(2,0)),251)
+</pre>
+

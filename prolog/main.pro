@@ -1,36 +1,41 @@
 % Valid digits for hh (in 24h)
-hour(X, Y) :-
+hh(X, Y) :-
   member(X, [0,1,2]),
   ( X == 2 ->
         member(Y, [0,1,2,3])
       ; member(Y, [0,1,2,3,4,5,6,7,8,9])).
 
 % Valid digits for mm
-minute(X, Y) :-
+mm(X, Y) :-
   member(X, [0,1,2,3,4,5]),
   member(Y, [0,1,2,3,4,5,6,7,8,9]).
 
-% Minute is the palindrom of the hour
-palindrom(X, Y, M) :-
-  hour(X, Y),
-  minute(Y, X),
-  M is (X*10+Y)*60+(Y*10)+X.
+% Subset of hh with palindrom in mm
+hhSubset(X, Y, A) :-
+  hh(X, Y),
+  mm(Y, X),
+  % Add time in minutes relative to day
+  A is (X*10+Y)*60+(Y*10)+X.
 
-% Find sibling palindroms with max distance
-max1(Z) :-
-  findall((X,Y,M), palindrom(X, Y, M), L),
-  max2(L, Z).
+% Pairs of consecutive palindroms with minute difference
+siblings(L2) :-
+  findall((X,Y,M), hhSubset(X, Y, M), L1),
+  L1 = [H|_],
+  pairs(H, L1, L2). 
 
-% Initialize search with first 2 palindroms 
-max2([(X1, Y1, M1), (X2, Y2, M2) | L], Z) :-
-  D is M2 - M1,
-  max3((D, false, X1, Y1, X2, Y2), [(X2, Y2, M2) | L], Z).
-  
-% Keep on searching through the list
-max3(Z, [_], Z).
-max3((D1, TF, X1, Y1, X2, Y2), [(X3, Y3, M3), (X4, Y4, M4) | L], Z) :-
-  D2 is M4 - M3,
-  ( D2 > D1, max3((D2, false, X3, Y3, X4, Y4), [(X4, Y4, M4) | L], Z)
-  ; D2 == D1, max3((D2, true, X3, Y3, X4, Y4), [(X4, Y4, M4) | L], Z)
-  ; max3((D1, TF, X1, Y1, X2, Y2), [(X4, Y4, M4) | L], Z)
-  ).
+% Helper of siblings/1; use time difference as key in key-value-pairs
+pairs((X2, Y2, A2), [(X1, Y1, A1)], [D-((X1, Y1), (X2, Y2))]) :-
+  D is A2+24*60-A1.
+pairs(H, [(X1, Y1, A1), (X2, Y2, A2)|L1], [D-((X1, Y1), (X2, Y2))|L2]) :-
+  D is A2-A1,
+  pairs(H, [(X2, Y2, A2)|L1], L2).
+
+% Siblings sorted by minute difference
+siblingsSorted(L2) :-
+  siblings(L1), 
+  keysort(L1, L2).
+
+% Sibling with maximum minute difference
+maxSibling(X) :-
+  siblingsSorted(L),
+  append(_, [X], L).
