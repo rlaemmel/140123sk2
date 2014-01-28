@@ -20,14 +20,14 @@ hhSubset(X, Y, A) :-
 % Pairs of consecutive palindroms with minute difference
 siblings(L2) :-
   findall((X,Y,M), hhSubset(X, Y, M), L1),
-  L1 = [H|_],
+  L1 = [H|_], % Pass first palindrom for handling special case
   pairs(H, L1, L2). 
 
 % Helper of siblings/1; use time difference as key in key-value-pairs
 pairs((X2, Y2, A2), [(X1, Y1, A1)], [D-((X1, Y1), (X2, Y2))]) :-
-  D is A2+24*60-A1.
+  D is A2+24*60-A1. % Special for last palindrom
 pairs(H, [(X1, Y1, A1), (X2, Y2, A2)|L1], [D-((X1, Y1), (X2, Y2))|L2]) :-
-  D is A2-A1,
+  D is A2-A1, % Regular case for two palindroms
   pairs(H, [(X2, Y2, A2)|L1], L2).
 
 % Siblings sorted by minute difference
